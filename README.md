@@ -4,7 +4,7 @@
 
 I map messy real-world operations into deterministic, event-driven software that people can trust under pressure.
 
-[**Run the JobSpark Live Demo**](https://jobsparksystems.app) · [JobSpark Systems](https://jobsparksystems.com) · [Contact](https://jobsparksystems.com/#contact)
+[**Run the JobSpark Live Demo**](https://jobsparksystems.app) · [**Inspect the Engineering Proof**](./ENGINEERING_PROOF.md) · [JobSpark Systems](https://jobsparksystems.com) · [Contact](https://jobsparksystems.com/#contact)
 
 ---
 
@@ -32,6 +32,8 @@ The public demo runs in an isolated synthetic workspace with no customer data:
 - Multi-workspace isolation and role-based access
 - Actionable exceptions that route uncertainty to the right human
 - Auditable history across the complete job lifecycle
+
+[**Read the sanitized architecture and reliability breakdown →**](./ENGINEERING_PROOF.md)
 
 ## Platform Experience
 
