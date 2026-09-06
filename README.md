@@ -1,65 +1,44 @@
 # Kyle Spivey
 
-### Forward-Deployed Systems Builder · Founder, JobSpark Systems
+Forward-deployed systems builder and founder of JobSpark Systems.
 
-I map messy real-world operations into deterministic, event-driven software that people can trust under pressure.
+I build software around how an operation actually works. My background is in maritime operations, moving logistics, and business ownership. JobSpark grew out of the scheduling, crew coordination, paperwork, and missed handoffs I saw firsthand.
 
-[**Run the JobSpark Live Demo**](https://jobsparksystems.app) · [**Inspect the Engineering Proof**](./ENGINEERING_PROOF.md) · [JobSpark Systems](https://jobsparksystems.com) · [Contact](https://jobsparksystems.com/#contact)
+[Try the JobSpark demo](https://jobsparksystems.app)
 
----
+[Architecture and engineering details](https://github.com/SKYBEAMS/SKYBEAMS/blob/main/ENGINEERING_PROOF.md)
 
-## Flagship Work: JobSpark
+[Website and contact](https://jobsparksystems.com/#contact)
 
-**JobSpark is a deployed live-operations execution system for field-service businesses.**
+## JobSpark
 
-It coordinates the complete operating lifecycle:
+JobSpark connects intake, scheduling, truck and crew assignments, dispatch, customer communications, field execution, closeout, history, and payroll around a shared job record.
 
-**Intake → Scheduling → Dispatch → Field Execution → Closeout**
+The important part is what happens when something changes. A customer asking for a different time does not silently change the dispatch plan. Missing closeout information pauses completion. Retrying a completed payroll step should not count the same work twice.
 
-The system brings jobs, crews, trucks, communications, notes, warnings, evidence, and operational state into one controlled workflow. Incomplete or conflicting information becomes an actionable exception instead of silently entering operations.
+Two workflows explain the design best:
 
-The public demo runs in an isolated synthetic workspace with no customer data:
+- Customer confirmation and owner-reviewed changes, including changes after dispatch is locked.
+- Validated closeout with checkpoints that let interrupted processing resume.
 
-[**Enter the interactive system →**](https://jobsparksystems.app)
+Both are covered in the [engineering overview](https://github.com/SKYBEAMS/SKYBEAMS/blob/main/ENGINEERING_PROOF.md).
 
-## Engineering Approach
+## Current status
 
-- Deterministic state transitions for canonical operational records
-- Event-driven execution for communications and downstream actions
-- Idempotency, retries, and crash-resilient workflows
-- Source-evidence preservation before normalization or interpretation
-- Bounded AI assistance that cannot freely overwrite canonical state
-- Multi-workspace isolation and role-based access
-- Actionable exceptions that route uncertainty to the right human
-- Auditable history across the complete job lifecycle
+The application is deployed. The public demo uses synthetic data in an isolated workspace and does not send live customer messages.
 
-[**Read the sanitized architecture and reliability breakdown →**](./ENGINEERING_PROOF.md)
+Make remains the automatic intake path for V1. Autonomous mode controls automatic communications, not intake. Native SignalWire call-to-job intake remains staged.
 
-## Platform Experience
+Live messaging configuration and production worker checks are still part of first-customer activation. The demo is a walkthrough of the product, not proof that those live services have been verified.
 
-| Area | Technology |
-|---|---|
-| Frontend | React, TypeScript, Vite, Tailwind CSS |
-| Backend | Node.js, Express, TypeScript |
-| Data and identity | Firestore, Firebase Authentication, Firebase Storage |
-| Communications | SignalWire voice and messaging |
-| Automation and models | Make, OpenAI, Gemini |
-| Delivery | GitHub Actions, Vercel, Render |
+Application code and customer configuration are private. This public repository contains the architecture overview.
 
-## Operator Perspective
+## Stack
 
-My background is in maritime operations, moving logistics, and business ownership—environments where unclear state, missed communication, and weak handoffs create real consequences.
+React, TypeScript, Vite, Tailwind CSS, Node.js, Express, Firestore, Firebase Authentication and Storage. Make handles the current intake handoff. SignalWire is the communications provider integration. Delivery uses GitHub Actions, Vercel, and Render.
 
-That experience shapes how I build software: understand the operation first, model the real entities and transitions, preserve the evidence, and make the next action obvious.
+## What I bring
 
-## Current Focus
+I can map an operation, define its records and decision rules, and carry that model through implementation. My focus is the shared state behind multiple workflows: who can change it, what should happen next, and what needs a person's judgment.
 
-- Forward-deployed engineering
-- Operational intelligence and execution platforms
-- Deterministic AI-assisted systems
-- Multi-tenant workflow architecture
-- Mission-driven engineering and volunteer collaboration
-
----
-
-> Good software does more than display information. It coordinates people, preserves truth, and drives the operation forward.
+I'm looking for engineering and implementation work where that combination of operating experience and systems building is useful.
