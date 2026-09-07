@@ -15,8 +15,11 @@ These results come from the private repository's GitHub Actions CI on September 
 | Closeout integrity | 22/22 | Interrupted closeouts can resume; concurrent and repeated closeouts credit payroll once; invalid closeouts remain in review |
 | Crew assignment transactions | 15/15 | Incomplete snapshots and stale plans are rejected; competing plans cannot claim the same mover; rejected requests leave assignment records unchanged |
 | Customer change lifecycle | 8/8 | Acceptance replaces old confirmation actions at the corrected 48-hour time, clears prior confirmation, records the decision, and creates critical review for locked dispatch |
+| Communications recovery | 6/6 | Confirmed failures retry once; unknown delivery is held for critical review; interrupted accepted sends reconcile; provider dead letters surface and can be requeued |
 
 The customer-change suite also checks rejection, stale evidence, wrong-job and wrong-workspace review items, competing accept/reject requests, and requests left open after a job is underway or finished.
+
+The communications-recovery suite runs simultaneous recovery workers against the same records. It checks that a rejected outbound message produces one retry, uncertain delivery produces no resend, a provider-accepted message repairs one interrupted action, manual mode does not auto-retry, and a dead-letter inbound event can be surfaced and requeued.
 
 One closeout test deliberately fails processing after payroll has been credited. It retries the command and checks that the employee still has three hours, not six. Another submits two closeouts simultaneously and checks for one payroll event and one completion event.
 
