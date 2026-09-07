@@ -6,6 +6,24 @@ This is a public overview of JobSpark's operating model and reliability controls
 
 [Product website](https://jobsparksystems.com)
 
+## Tested behavior
+
+These results come from the private repository's GitHub Actions CI on September 7, 2026. The tests below call server commands against the Firestore emulator with synthetic records. They check database outcomes, not screenshots.
+
+| Suite | Passed | What the tests check |
+|---|---:|---|
+| Closeout integrity | 22/22 | Interrupted closeouts can resume; concurrent and repeated closeouts credit payroll once; invalid closeouts remain in review |
+| Crew assignment transactions | 15/15 | Incomplete snapshots and stale plans are rejected; competing plans cannot claim the same mover; rejected requests leave assignment records unchanged |
+| Customer change lifecycle | 8/8 | Acceptance replaces old confirmation actions at the corrected 48-hour time, clears prior confirmation, records the decision, and creates critical review for locked dispatch |
+
+The customer-change suite also checks rejection, stale evidence, wrong-job and wrong-workspace review items, competing accept/reject requests, and requests left open after a job is underway or finished.
+
+One closeout test deliberately fails processing after payroll has been credited. It retries the command and checks that the employee still has three hours, not six. Another submits two closeouts simultaneously and checks for one payroll event and one completion event.
+
+The assignment tests submit two plans competing for one mover. One succeeds. The other is rejected with its job, truck, and plan left unchanged.
+
+These are results from specified test scenarios, not a guarantee for every failure or proof of live provider delivery. Source and CI logs remain private, so this page is a published summary rather than an independently runnable public test suite. Production messaging and worker uptime need separate checks.
+
 ## The Operating Problem
 
 Field-service operations rarely fail because information does not exist. They fail because jobs, crews, vehicles, communications, evidence, and exceptions move through disconnected systems with unclear ownership and state.
