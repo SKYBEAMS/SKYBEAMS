@@ -23,6 +23,12 @@ Two workflows explain the design best:
 
 Both are covered in the [engineering overview](https://github.com/SKYBEAMS/SKYBEAMS/blob/main/ENGINEERING_PROOF.md).
 
+## Checks behind the demo
+
+The private repository's September 7 CI passed 22 closeout integrity tests, 15 crew assignment transaction tests, and 8 customer-change lifecycle tests against Firestore's emulator. The scenarios include interrupted processing, duplicate requests, competing assignments, and approved changes rebuilding dependent communications.
+
+[See the tested behavior and its limits](https://github.com/SKYBEAMS/SKYBEAMS/blob/main/ENGINEERING_PROOF.md#tested-behavior).
+
 ## Current status
 
 The application is deployed. The public demo uses synthetic data in an isolated workspace and does not send live customer messages.
