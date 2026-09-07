@@ -25,7 +25,7 @@ Both are covered in the [engineering overview](https://github.com/SKYBEAMS/SKYBE
 
 ## Checks behind the demo
 
-The private repository's September 7 CI passed 22 closeout integrity tests, 15 crew assignment transaction tests, and 8 customer-change lifecycle tests against Firestore's emulator. The scenarios include interrupted processing, duplicate requests, competing assignments, and approved changes rebuilding dependent communications.
+The private repository's September 7 CI passed 22 closeout integrity tests, 15 crew assignment transaction tests, 8 customer-change lifecycle tests, and 6 communications recovery tests against Firestore's emulator. The scenarios include interrupted processing, duplicate requests, competing assignments, approved changes rebuilding dependent communications, and communication failures recovering without duplicate sends.
 
 [See the tested behavior and its limits](https://github.com/SKYBEAMS/SKYBEAMS/blob/main/ENGINEERING_PROOF.md#tested-behavior).
 
