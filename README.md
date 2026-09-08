@@ -2,49 +2,47 @@
 
 Forward-deployed systems builder and founder of JobSpark Systems.
 
-I build software around how an operation actually works. My background is in maritime operations, moving logistics, and business ownership. JobSpark grew out of the scheduling, crew coordination, paperwork, and missed handoffs I saw firsthand.
+I build software around how an operation actually works. My background is in maritime operations, moving logistics, and business ownership. I built JobSpark after seeing scheduling, crew coordination, paperwork, and missed handoffs break down inside a live service business.
 
-[Try the JobSpark demo](https://jobsparksystems.app)
+[Run the JobSpark demo](https://jobsparksystems.app)
 
-[Architecture and engineering details](https://github.com/SKYBEAMS/SKYBEAMS/blob/main/ENGINEERING_PROOF.md)
+[Read the architecture and engineering proof](https://github.com/SKYBEAMS/SKYBEAMS/blob/main/ENGINEERING_PROOF.md)
 
-[Website and contact](https://jobsparksystems.com/#contact)
+[Visit JobSpark Systems](https://jobsparksystems.com)
 
-## JobSpark
+## What I Built
 
-JobSpark connects intake, scheduling, truck and crew assignments, dispatch, customer communications, field execution, closeout, history, and payroll around a shared job record.
+I built JobSpark to coordinate intake, scheduling, truck and crew assignments, dispatch, communications, field execution, closeout, history, and payroll around one accepted job record.
 
-The important part is what happens when something changes. A customer asking for a different time does not silently change the dispatch plan. Missing closeout information pauses completion. Retrying a completed payroll step should not count the same work twice.
+I focused on what happens when reality changes. A customer asking for a different time cannot silently rewrite a locked dispatch plan. Missing contract information pauses completion. Retrying a completed payroll step cannot count the same work twice.
 
-Two workflows explain the design best:
+Two workflows show the architecture best:
 
-- Customer confirmation and owner-reviewed changes, including changes after dispatch is locked.
-- Validated closeout with checkpoints that let interrupted processing resume.
+- Customer confirmation with owner-reviewed changes, including changes after dispatch locks
+- Validated closeout with checkpoints that resume interrupted work without duplicating payroll
 
-Both are covered in the [engineering overview](https://github.com/SKYBEAMS/SKYBEAMS/blob/main/ENGINEERING_PROOF.md).
+I mapped both workflows in the [engineering overview](https://github.com/SKYBEAMS/SKYBEAMS/blob/main/ENGINEERING_PROOF.md).
 
-## Checks behind the demo
+## Evidence Behind the Demo
 
-The private repository's September 7 CI passed 22 closeout integrity tests, 15 crew assignment transaction tests, 8 customer-change lifecycle tests, and 6 communications recovery tests against Firestore's emulator. The scenarios include interrupted processing, duplicate requests, competing assignments, approved changes rebuilding dependent communications, and communication failures recovering without duplicate sends.
+I use focused tests against the Firestore emulator to prove the difficult parts of the lifecycle. They cover interrupted closeout, duplicate requests, competing crew assignments, approved changes rebuilding dependent communications, communication recovery, and truck unlock/relock cycles.
 
 [See the tested behavior and its limits](https://github.com/SKYBEAMS/SKYBEAMS/blob/main/ENGINEERING_PROOF.md#tested-behavior).
 
-## Current status
+## Current Boundary
 
-The application is deployed. The public demo uses synthetic data in an isolated workspace and does not send live customer messages.
+I deployed the application and separated the public demo into a synthetic workspace. The demo does not use customer records or send live messages.
 
-Make remains the automatic intake path for V1. Autonomous mode controls automatic communications, not intake. Native SignalWire call-to-job intake remains staged.
+For V1, I keep Make as the automatic intake path. Autonomous mode controls automatic communications. Native SignalWire call-to-job intake remains staged.
 
-Live messaging configuration and production worker checks are still part of first-customer activation. The demo is a walkthrough of the product, not proof that those live services have been verified.
-
-Application code and customer configuration are private. This public repository contains the architecture overview.
+Before onboarding the first customer, I still need to verify the live messaging configuration, production workers, and external contract reader. The demo proves the product flow and interface; my private repository contains the implementation and lifecycle tests.
 
 ## Stack
 
-React, TypeScript, Vite, Tailwind CSS, Node.js, Express, Firestore, Firebase Authentication and Storage. Make handles the current intake handoff. SignalWire is the communications provider integration. Delivery uses GitHub Actions, Vercel, and Render.
+I built JobSpark with React, TypeScript, Vite, Tailwind CSS, Node.js, Express, Firestore, Firebase Authentication, and Firebase Storage. I use Make for the current intake handoff, SignalWire at the communications boundary, GitHub Actions for verification, Vercel for the frontend, and Render for the API.
 
-## What I bring
+## What I Do
 
-I can map an operation, define its records and decision rules, and carry that model through implementation. My focus is the shared state behind multiple workflows: who can change it, what should happen next, and what needs a person's judgment.
+I map an operation, define its records and decision rules, and carry that model through implementation. I focus on the shared state behind multiple workflows: who can change it, what should happen next, and what requires a person's judgment.
 
-I'm looking for engineering and implementation work where that combination of operating experience and systems building is useful.
+I am looking for engineering and implementation work where operating experience and systems building belong in the same role.
