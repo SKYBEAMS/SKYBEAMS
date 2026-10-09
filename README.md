@@ -4,7 +4,7 @@ Forward-deployed systems builder and founder of JobSpark Systems.
 
 I build software around how an operation actually works. My background is in maritime operations, moving logistics, and business ownership. JobSpark grew out of the scheduling, crew coordination, paperwork, and missed handoffs I saw firsthand.
 
-[Try the JobSpark demo](https://jobsparksystems.app)
+[Try the JobSpark demo](https://jobsparksystems.app/?demo=falcon)
 
 [Architecture and engineering details](https://github.com/SKYBEAMS/SKYBEAMS/blob/main/ENGINEERING_PROOF.md)
 
@@ -23,21 +23,25 @@ Two workflows explain the design best:
 
 Both are covered in the [engineering overview](https://github.com/SKYBEAMS/SKYBEAMS/blob/main/ENGINEERING_PROOF.md).
 
-## Checks behind the demo
+## Engineering evidence
 
-The private repository's September 7 CI passed 22 closeout integrity tests, 15 crew assignment transaction tests, 8 customer-change lifecycle tests, and 6 communications recovery tests against Firestore's emulator. The scenarios include interrupted processing, duplicate requests, competing assignments, approved changes rebuilding dependent communications, and communication failures recovering without duplicate sends.
+The October 8 source audit records **100,796 application-source lines across 342 files**, with 146 test files counted separately. Source counts include comments and blank lines; they are not counts of state-machine logic.
 
-[See the tested behavior and its limits](https://github.com/SKYBEAMS/SKYBEAMS/blob/main/ENGINEERING_PROOF.md#tested-behavior).
+Current main CI passed all four jobs, including **11 browser cases** using isolated Auth, Firestore and Storage. The checks cover persisted assignment, guarded role access, contract upload, office review, duplicate-safe payroll/history, Health and missing-date correction.
+
+The October 6 operator-reported deployed canary exercised the connected lifecycle through communications, exceptions, closeout and History/payroll. Subsequent authenticated saved-record inspection and deployed Health fixes are documented separately from the synthetic browser results.
+
+[Read the current engineering proof, counting method and dated evidence](https://github.com/SKYBEAMS/SKYBEAMS/blob/main/ENGINEERING_PROOF.md).
 
 ## Current status
 
-The application is deployed. The public demo uses synthetic data in an isolated workspace and does not send live customer messages.
+The application is deployed. The public Falcon demo uses synthetic data in an isolated workspace and does not send live customer messages.
 
-Make remains the automatic intake path for V1. Autonomous mode controls automatic communications, not intake. Native SignalWire call-to-job intake remains staged.
+Make remains the automatic intake path for V1. The server-owned Gemini reader and durable worker process enabled crew-link contracts; Make closeout is retained for rollback. Autonomous mode controls automatic communications, not intake. Native SignalWire call-to-job intake remains staged.
 
-Live messaging configuration and production worker checks are still part of first-customer activation. The demo is a walkthrough of the product, not proof that those live services have been verified.
+Successful recorded live canaries and automated checks support the connected operating path. Published policy/IAM readback, exact live-canary financial evidence and formal pilot acceptance remain separate release checks.
 
-Application code and customer configuration are private. This public repository contains the architecture overview.
+Application code and customer configuration are private. This public repository contains the architecture and engineering evidence summary.
 
 ## Stack
 
