@@ -4,10 +4,8 @@ Forward-deployed systems builder and founder of JobSpark Systems.
 
 I build software around how an operation actually works. My background is in maritime operations, moving logistics, and business ownership. JobSpark grew out of the scheduling, crew coordination, paperwork, and missed handoffs I saw firsthand.
 
-[Try the JobSpark demo](https://jobsparksystems.app/?demo=falcon)
-
-[Architecture and engineering details](https://github.com/SKYBEAMS/SKYBEAMS/blob/main/ENGINEERING_PROOF.md)
-
+[Try the JobSpark demo](https://jobsparksystems.app/?demo=falcon)  
+[Engineering Proof](https://github.com/SKYBEAMS/SKYBEAMS/blob/main/ENGINEERING_PROOF.md)  
 [Website and contact](https://jobsparksystems.com/#contact)
 
 ## JobSpark
@@ -21,27 +19,23 @@ Two workflows explain the design best:
 - Customer confirmation and owner-reviewed changes, including changes after dispatch is locked.
 - Validated closeout with checkpoints that let interrupted processing resume.
 
-Both are covered in the [engineering overview](https://github.com/SKYBEAMS/SKYBEAMS/blob/main/ENGINEERING_PROOF.md).
+Both are covered in the [Engineering Proof](https://github.com/SKYBEAMS/SKYBEAMS/blob/main/ENGINEERING_PROOF.md).
 
 ## Engineering evidence
 
-The October 8 source audit records **100,796 application-source lines across 342 files**, with 146 test files counted separately. Source counts include comments and blank lines; they are not counts of state-machine logic.
+The single public evidence index is here:
 
-Current main CI passed all four jobs, including **11 browser cases** using isolated Auth, Firestore and Storage. The checks cover persisted assignment, guarded role access, contract upload, office review, duplicate-safe payroll/history, Health and missing-date correction.
+**[Engineering Proof →](https://github.com/SKYBEAMS/SKYBEAMS/blob/main/ENGINEERING_PROOF.md)**
 
-The October 6 operator-reported deployed canary exercised the connected lifecycle through communications, exceptions, closeout and History/payroll. Subsequent authenticated saved-record inspection and deployed Health fixes are documented separately from the synthetic browser results.
+It covers deployment identity, failure and recovery design, financial correctness posture, authority boundaries, deterministic lifecycle behavior, test/CI evidence, parallel domain work (MathCo), and current honest gaps.
 
-[Read the current engineering proof, counting method and dated evidence](https://github.com/SKYBEAMS/SKYBEAMS/blob/main/ENGINEERING_PROOF.md).
+Application code, full test suites, and internal review documents remain private and are available to serious reviewers on request.
 
 ## Current status
 
 The application is deployed. The public Falcon demo uses synthetic data in an isolated workspace and does not send live customer messages.
 
-Make remains the automatic intake path for V1. The server-owned Gemini reader and durable worker process enabled crew-link contracts; Make closeout is retained for rollback. Autonomous mode controls automatic communications, not intake. Native SignalWire call-to-job intake remains staged.
-
-Successful recorded live canaries and automated checks support the connected operating path. Published policy/IAM readback, exact live-canary financial evidence and formal pilot acceptance remain separate release checks.
-
-Application code and customer configuration are private. This public repository contains the architecture and engineering evidence summary.
+JobSpark is in active V1 hardening. Strong controlled-decision and recovery design is demonstrated. Formal pilot acceptance and measured economic impact remain open.
 
 ## Stack
 
