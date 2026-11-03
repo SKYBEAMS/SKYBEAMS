@@ -34,8 +34,7 @@ Jump to a category:
 4. [Authority & Security Boundaries](#4-authority--security-boundaries)
 5. [Deterministic Lifecycle & State](#5-deterministic-lifecycle--state)
 6. [Test & CI Evidence](#6-test--ci-evidence)
-7. [Parallel Domain Evidence (MathCo)](#7-parallel-domain-evidence-mathco)
-8. [Current Gaps & Honest Status](#8-current-gaps--honest-status)
+7. [Current Gaps & Honest Status](#7-current-gaps--honest-status)
 
 ---
 
@@ -126,7 +125,7 @@ The public demo walks a synthetic job through the main path. Deeper state-machin
 
 The private repository maintains required CI checks and a substantial automated suite.
 
-**Publicly summarized evidence (historical snapshots)**
+**Publicly summarized evidence**
 - Multiple required CI jobs (build, browser, hooks, API startup)
 - Browser journeys covering assignment, permissions, contract upload, office review, payroll/history, and correction paths
 - Targeted suites for closeout integrity, concurrent assignment, customer change lifecycle, and communications recovery
@@ -136,21 +135,7 @@ Exact current counts, full test maps, and CI run links require private repositor
 
 ---
 
-### 7. Parallel Domain Evidence (MathCo)
-
-A separate assessment project (MathCo / Fernleigh plumbing scheduling) demonstrates the same engineering approach in a different domain:
-
-- Deterministic scheduling and eligibility rules
-- Separation of AI interpretation from executable decisions
-- Evidence fingerprints and validation of revisions
-- Large automated test suite (553 tests on the inspected main)
-- Pressure and constraint scenarios
-
-This work is independent of JobSpark and shows the approach is not limited to one vertical. Access details available on request.
-
----
-
-### 8. Current Gaps & Honest Status
+### 7. Current Gaps & Honest Status
 
 JobSpark is in active V1 hardening. The following remain open or only partially demonstrated:
 
@@ -170,7 +155,7 @@ The system demonstrates strong controlled-decision and recovery design. It does 
 |----------|------------|
 | Resume / initial review | Read this page + try the [live demo](https://jobsparksystems.app/?demo=falcon) |
 | Serious technical review | Request access to the private JobSpark repository and the detailed ownership / test / authority documents |
-| Hiring conversation | I can walk through any section live, including recovery drills, state transitions, and the MathCo parallel work |
+| Hiring conversation | I can walk through any section live, including recovery drills, state transitions, and financial correctness controls |
 
 ---
 
