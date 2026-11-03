@@ -1,267 +1,183 @@
-# JobSpark engineering proof
+# JobSpark Engineering Proof
 
-Updated October 9, 2026. Source snapshot: October 8, 2026, revision `704b423688358d5713754bfade0e1a2d37b55c93`.
+**Kyle Spivey** · Forward-deployed systems builder  
+Updated: November 3, 2026
 
-JobSpark is a deployed operations execution system built independently by Kyle Spivey. It coordinates intake, canonical jobs, scheduling, crew and truck assignment, dispatch, field communications, contract review, closeout, payroll and history around shared operational state.
+This is the single public engineering evidence index for JobSpark.  
+It is not a marketing document. Every section below links to concrete evidence of how the system is built, tested, deployed, and recovered.
 
-The engineering work is the connected behavior: a change to the accepted job affects dependent schedules and communications; incomplete evidence stops financial completion; retries resume saved work without crediting the same payroll twice.
+[Live Demo (synthetic)](https://jobsparksystems.app/?demo=falcon) · [Product site](https://jobsparksystems.com) · [Profile README](https://github.com/SKYBEAMS/SKYBEAMS)
 
-[Try the public demo — no login](https://jobsparksystems.app/?demo=falcon) · [Product website](https://jobsparksystems.com)
+---
 
-## Current execution evidence
+## What JobSpark is
 
-| Evidence | Recorded result | Scope |
-|---|---|---|
-| Current main CI | All four jobs passed on `704b423`: build and integrity, frontend dispatch hooks, production API dependency/startup, and reviewer browser workflow | [Run 37630119780](https://github.com/SKYBEAMS/jobSPARK/actions/runs/37630119780); source and test environment are pinned |
-| Browser execution | **11 passed**, independently confirmed in the CI browser log | Chromium with isolated Auth, Firestore and Storage; reader output is controlled |
-| Assignment and permissions | Saved job/truck/crew assignment survives refresh; restricted roles cannot perform guarded changes | Rendered UI plus persisted-state and HTTP denial assertions |
-| Contract → review → payroll/history | Complete and incomplete contracts take distinct paths; missing price holds completion until office correction | Real local file selection/upload and Storage bytes; synthetic extraction proposal |
-| Financial persistence | Eight actual hours at $25/$30 produce $200/$240 gross; one ledger row per crew member remains after repetition and refresh | Explicit fixture values, not customer payroll |
-| Missing-field correction | A confirmed job without a date opens on the highlighted field; Enter saves the schedule and reload clears its warning | Isolated browser journey; live operator acceptance is separate |
-| Deployed canary | October 6 operator report records the connected lifecycle, communications, actionable exceptions, closeout and History/payroll visibility | Live report carried into the dated record; no new canary was run for this publication |
-| Saved-record and Health readback | Subsequent authenticated inspection found a completed job with two payroll ledger entries and a finished reader; deployed fixes cleared superseded extraction warnings | Recorded October 6–7 follow-up, not a continuous uptime or delivery measurement |
+JobSpark is a production operations system that coordinates a moving company’s work from intake through dispatch, field execution, contract closeout, history, and payroll around a single shared job record.
 
-The live canary advances the evidence beyond a synthetic demonstration. Automated browser and emulator checks supply repeatable assertions for specific invariants; the live report supplies evidence that the deployed path has exercised real integrations. Exact live execution IDs, contract hashes and financial values still belong in the formal release record.
+The engineering focus is controlled state, explicit transitions, recoverable side effects, and making uncertainty visible instead of silent.
 
-The source and CI links below require separately granted private-repository access. This public page contains no customer records, provider credentials or production payloads.
+Core principles:
+- AI may propose; it does not independently overwrite canonical operational state
+- Important changes go through explicit, validated commands
+- Interrupted work can resume from recorded checkpoints without double-counting effects
+- Missing or conflicting evidence becomes actionable work, not a silent failure
 
-- [Current source revision](https://github.com/SKYBEAMS/jobSPARK/commit/704b423688358d5713754bfade0e1a2d37b55c93)
-- [Reviewer handoff](https://github.com/SKYBEAMS/jobSPARK/blob/704b423688358d5713754bfade0e1a2d37b55c93/docs/REVIEWER_HANDOFF.md)
-- [Dated live canary and deployment evidence](https://github.com/SKYBEAMS/jobSPARK/blob/704b423688358d5713754bfade0e1a2d37b55c93/docs/LIVE_CANARY_2026-10-06.md)
-- [Subsystem test map](https://github.com/SKYBEAMS/jobSPARK/blob/704b423688358d5713754bfade0e1a2d37b55c93/docs/TEST_MAP.md)
+---
 
-## Engineering scale and counting method
+## Evidence Categories
 
-These figures carry forward the October 8 numerical audit used for the updated engineering proof. Its source pin matches the repository main inspected for this update.
+Jump to a category:
 
-| Measure | Pinned source snapshot |
-|---|---|
-| Application source | **100,796 lines across 342 files** |
-| Frontend | 181 files / 46,284 lines |
-| Backend | 161 files / 54,512 lines |
-| Test inventory | 146 tracked test files / 25,367 lines, counted separately |
-| Literal HTTP route declarations | 105: 79 outside the demo router and 26 in the demo router |
-| Selected action/history definitions | 16 allowed action types, 10 action-event types and 22 history-event types |
-| Canonical action transition model | 7 states and 15 explicitly allowed transitions |
-| Durable closeout execution | 7 persisted checkpoints |
-| Data/configuration inventory | 43 unique literal collection references, 29 composite indexes, 5 configured workspaces and 5 role values |
-| Direct model request locations | 3 OpenAI SDK request sites and 1 native Gemini HTTP request site; external Make calls are separate |
+1. [Deployment & Release Identity](#1-deployment--release-identity)
+2. [Failure Modes & Recovery](#2-failure-modes--recovery)
+3. [Financial Correctness](#3-financial-correctness)
+4. [Authority & Security Boundaries](#4-authority--security-boundaries)
+5. [Deterministic Lifecycle & State](#5-deterministic-lifecycle--state)
+6. [Test & CI Evidence](#6-test--ci-evidence)
+7. [Parallel Domain Evidence (MathCo)](#7-parallel-domain-evidence-mathco)
+8. [Current Gaps & Honest Status](#8-current-gaps--honest-status)
 
-Application source means tracked `.ts/.tsx/.js` files under `src` and `server`, excluding test/spec files, `src/remotion`, the demo-history seed and the native HTTP test fixture. Executable demo runtime remains included. Counts include comments and blank lines; dependencies, generated builds, assets, documentation, scripts and lockfiles are excluded. The original audit matched counted files to their pinned GitHub blob SHAs.
+---
 
-**100,796 is a source-line count, not 100,796 lines of state-machine logic.** Route declarations are a static inventory, not a claim that every endpoint was exercised live. Configured workspaces are not paying customers. The action/history and transition counts describe named definitions, not every state machine or event in the system.
+### 1. Deployment & Release Identity
 
-The older July 70,400-line / 245-file snapshot is historical. The old totals for 56 workflow groups, 21 machines, exceptions, repair paths and approval boundaries are retired as exhaustive current counts; the current proof uses named domains, source owners and test assertions.
+JobSpark is deployed. Frontend and API can ship on different schedules. Release identity is verified by commit SHA, not by assumption.
 
-## Tested behavior
+**What exists today**
+- Required PR checks: build/integrity, browser workflow, frontend hooks, production-dependency API startup
+- Render deploys the API from `main` on commit
+- Vercel builds the frontend
+- Public health and version probes exist to confirm the running SHA
+- Documented release and rollback posture
 
-The current [CI run](https://github.com/SKYBEAMS/jobSPARK/actions/runs/37630119780) includes strict server TypeScript, workspace and Storage rules, existing-session access removal, native extraction and durable closeout, dispatch lock/unlock/relock, communications recovery, lifecycle authority, payroll integrity and operational golden-path checks. Root typechecking also passes; whole-repository strict mode is not claimed.
+**Key evidence**
+- Live demo and product site are publicly reachable
+- Deployment and ownership notes are maintained in the private repository and available on request
 
-The authenticated reviewer sandbox uses six synthetic role/workspace accounts and local Auth, Firestore and Storage. Its browser suite exercises assignment, upload, office correction, History/payroll, Health and missing-date correction. Controlled reader output makes the financial expectations reproducible; it does not measure real OCR accuracy.
+---
 
-### Historical September checkpoint
+### 2. Failure Modes & Recovery
 
-The following individually numbered results are retained as September 7, 2026 evidence. They are not relabeled as current test totals.
+The system is designed so that interruptions, partial completion, and external failures do not silently corrupt operational or financial state.
 
-| Suite | Passed | What the tests check |
-|---|---:|---|
-| Closeout integrity | 22/22 | Interrupted closeouts can resume; concurrent and repeated closeouts credit payroll once; invalid closeouts remain in review |
-| Crew assignment transactions | 15/15 | Incomplete snapshots and stale plans are rejected; competing plans cannot claim the same mover; rejected requests leave assignment records unchanged |
-| Customer change lifecycle | 8/8 | Acceptance replaces old confirmation actions at the corrected 48-hour time, clears prior confirmation, records the decision, and creates critical review for locked dispatch |
-| Communications recovery | 6/6 | Confirmed failures retry once; unknown delivery is held for critical review; interrupted accepted sends reconcile; provider dead letters surface and can be requeued |
+**What is demonstrated**
+- Durable closeout execution with recorded checkpoints
+- Recovery workers that resume from the last completed stage
+- Protection against double-counting payroll or duplicating side effects
+- Explicit handling when state is missing or retry limits are reached (surfaces as attention items)
+- Controlled drills for closeout interruption and restore scenarios (emulator-based)
 
-The customer-change suite also checks rejection, stale evidence, wrong-job and wrong-workspace review items, competing accept/reject requests, and requests left open after a job is underway or finished.
+**Design stance**
+- Checkpoints + domain guards make replay safe
+- External effects (messages, payroll writes) are tracked separately from internal progress
+- Owner attention is required when automatic recovery is no longer safe
 
-The communications-recovery suite runs simultaneous recovery workers against the same records. It checks that a rejected outbound message produces one retry, uncertain delivery produces no resend, a provider-accepted message repairs one interrupted action, manual mode does not auto-retry, and a dead-letter inbound event can be surfaced and requeued.
+---
 
-One closeout test deliberately fails processing after payroll has been credited. It retries the command and checks that the employee still has three hours, not six. Another submits two closeouts simultaneously and checks for one payroll event and one completion event.
+### 3. Financial Correctness
 
-The assignment tests submit two plans competing for one mover. One succeeds. The other is rejected with its job, truck, and plan left unchanged.
+Payroll and ledger behavior is treated as high-stakes. The system prefers visible problems over silent incorrect completion.
 
-These are results from specified test scenarios, not a guarantee for every failure or proof of live provider delivery. Source and CI logs remain private, so this page is a published summary rather than an independently runnable public test suite. Production messaging and worker uptime need separate checks.
+**Current posture**
+- Ledger rows and payroll runs are created through controlled commands
+- Missing rates and incomplete evidence are intended to block or surface completion
+- Idempotent aggregation is a core requirement (retries must not double-count hours)
 
-## The Operating Problem
+**Known focus areas (November 2026)**
+- Server-side enforcement that missing rates cannot reach a PAID state
+- Correct attention-item resolution after rate corrections
+- Completeness of revenue and workload queries under large history
 
-Field-service operations rarely fail because information does not exist. They fail because jobs, crews, vehicles, communications, evidence, and exceptions move through disconnected systems with unclear ownership and state.
+These items are tracked as explicit findings and next work. Detailed audit notes are available on request.
 
-JobSpark was designed to make the operation itself executable: every job has an explicit state, every important transition has a controlled path, and uncertainty is surfaced before it silently becomes an operational mistake.
+---
 
-## System Model
+### 4. Authority & Security Boundaries
 
-| Entity | Operational responsibility |
-|---|---|
-| Workspace | Isolates one company's configuration, users, records, and communication routes |
-| Intake | Preserves source evidence and candidate job details |
-| Job | Holds the canonical operational record and lifecycle state |
-| Queue | Makes the next required operational action visible |
-| Crew | Represents availability, skills, assignments, and working state |
-| Truck | Coordinates a live dispatched operating unit |
-| Communication | Preserves inbound/outbound provider evidence and delivery state |
-| Contract | Captures field closeout evidence and extracted candidate values |
-| Attention item | Converts missing, contradictory, or uncertain data into an actionable exception |
-| Lifecycle event | Provides an auditable record of meaningful state changes |
+Write authority is server-owned. The browser presents state and submits commands; it does not hold the final authority to mutate consequential records.
 
-## Execution Path
+**Boundaries maintained**
+- Workspace isolation
+- Role-based guards on sensitive actions
+- Explicit separation between browser writes and server-validated commands
+- Storage and evidence handling rules
+- Public demo runs in an isolated synthetic workspace with no customer data
 
-```mermaid
-flowchart TD
-    A["Source evidence"] --> B["Candidate operational data"]
-    B --> C{"Deterministic validation"}
-    C -->|Complete| D["Canonical job state"]
-    C -->|Missing or conflicting| E["Needs Attention"]
-    E --> F["Human resolution"]
-    F --> D
-    D --> G["Schedule and dispatch"]
-    G --> H["Field execution"]
-    H --> I["Closeout and history"]
-```
+Detailed authority and security reference documents live in the private repository and can be shared with serious reviewers.
 
-The canonical job record is not a free-form AI document. Provider facts and source evidence are preserved first. Extracted details become candidates, deterministic rules decide whether they are operationally usable, and unresolved uncertainty becomes visible work.
+---
 
-## State and Safety Boundaries
+### 5. Deterministic Lifecycle & State
 
-- AI may extract, summarize, classify, or recommend.
-- AI output does not independently overwrite canonical operational state.
-- Recognized commands use explicit transition paths.
-- Unknown or contradictory input fails toward review, not silent execution.
-- Workspace identity is resolved before operational records are read or written.
-- Public-demo activity runs in an isolated synthetic workspace with no customer data.
-- Communications preserve provider identifiers and original message evidence.
-- Retries are designed to avoid creating duplicate operational work.
+Jobs move through an explicit lifecycle. Important transitions are commands, not free-form status changes.
 
-## Reliability Design
+**Key behaviors**
+- Intake preserves source evidence before acceptance
+- Scheduling and dispatch can be locked
+- Customer-driven changes after lock become review items instead of silent mutations
+- Closeout requires validated evidence and proceeds through checkpoints
+- History and payroll are downstream of successful closeout stages
 
-### Idempotent intake and communications
+The public demo walks a synthetic job through the main path. Deeper state-machine and transition evidence is available on request.
 
-External providers retry. JobSpark uses stable provider identifiers and deterministic record keys so the same delivery can be recognized instead of creating a second job, message, or exception.
+---
 
-### Controlled lifecycle transitions
+### 6. Test & CI Evidence
 
-Important state changes pass through explicit commands and validation. This keeps UI actions, provider webhooks, and background execution from becoming independent writers with different interpretations of the same job.
+The private repository maintains required CI checks and a substantial automated suite.
 
-### Recoverable side effects
+**Publicly summarized evidence (historical snapshots)**
+- Multiple required CI jobs (build, browser, hooks, API startup)
+- Browser journeys covering assignment, permissions, contract upload, office review, payroll/history, and correction paths
+- Targeted suites for closeout integrity, concurrent assignment, customer change lifecycle, and communications recovery
+- Emulator-based drills for recovery and restore behavior
 
-Operational state and external effects, such as communications, are tracked separately. A provider failure can remain visible and retryable without pretending the message was delivered or rolling back unrelated canonical work.
+Exact current counts, full test maps, and CI run links require private repository access and can be provided to reviewers.
 
-### Actionable uncertainty
+---
 
-Missing dates, addresses, customer details, closeout amounts, or unclear replies become attention items connected to the affected record and required field. The operator resolves the exception and resumes the existing flow.
+### 7. Parallel Domain Evidence (MathCo)
 
-### Auditable completion
+A separate assessment project (MathCo / Fernleigh plumbing scheduling) demonstrates the same engineering approach in a different domain:
 
-Closeout preserves field evidence, detects missing values, routes incomplete records for review, and records the completed outcome in history and downstream payroll views.
+- Deterministic scheduling and eligibility rules
+- Separation of AI interpretation from executable decisions
+- Evidence fingerprints and validation of revisions
+- Large automated test suite (553 tests on the inspected main)
+- Pressure and constraint scenarios
 
-## Communication Architecture
+This work is independent of JobSpark and shows the approach is not limited to one vertical. Access details available on request.
 
-The SignalWire integration includes workspace-aware messaging and staged voice intake. Make remains the active automatic job-intake path. JobSpark now owns crew-link contract extraction through a server-side Gemini adapter and durable worker, enabled for controlled PVM verification. The old Make closeout path is retained for rollback. Autonomous mode controls automatic communications only.
+---
 
-The dated live canary records communications progression on the deployed path. The synthetic demo does not send live messages; sustained delivery, worker uptime and first-customer activation still require their own checks.
+### 8. Current Gaps & Honest Status
 
-The integration contains controls for:
+JobSpark is in active V1 hardening. The following remain open or only partially demonstrated:
 
-- Inbound provider-message preservation
-- Deterministic workspace resolution by configured number
-- Duplicate-delivery protection
-- STOP and HELP handling
-- Delivery-status tracking
-- Unknown operational corrections routed to human review
-- Media evidence retained for closeout processing
+- Full deployed acceptance of a complete live customer job (end-to-end financial + communications evidence)
+- Independent verification of all production policies, IAM, and rollback artifacts
+- Measured economic impact / unit economics
+- Repeatable customer onboarding and operator handoff package
+- Resolution of the specific financial correctness findings noted in section 3
 
-## Customer confirmation and controlled changes
+The system demonstrates strong controlled-decision and recovery design. It does not yet claim formal pilot sign-off or production certification for an external operator.
 
-A customer reply can confirm the plan, but it cannot silently rewrite live operations.
+---
 
-```mermaid
-flowchart TD
-    A["Canonical job with scheduled date and time"] --> B["48-hour confirmation worker"]
-    B --> C["Durable communication action"]
-    C --> D["SignalWire provider boundary"]
-    D --> E{"Customer response"}
-    E -->|"YES or OK"| F["Mark canonical job confirmed"]
-    E -->|"No reply at cutoff"| G["Create Not Confirmed attention"]
-    E -->|"Date, time, or address change"| H["Create critical Needs Attention; do not mutate job"]
-    H --> I{"Owner decision on exact field"}
-    I -->|"Reject"| J["Keep canonical state and record resolution"]
-    I -->|"Accept"| K["Update canonical field and append audit history"]
-    K --> L["Retire stale actions; re-derive schedule; rebuild communications"]
-    L --> M{"Dispatch already locked?"}
-    M -->|"No"| N["Continue on corrected operating plan"]
-    M -->|"Yes"| O["Create critical dispatch review"]
-```
+## How to go deeper
 
-This preserves the difference between customer evidence and accepted operating truth. A schedule change also invalidates old confirmation, crew-check-in, and timing actions so the system cannot execute yesterday's plan against today's job.
+| Audience | What to do |
+|----------|------------|
+| Resume / initial review | Read this page + try the [live demo](https://jobsparksystems.app/?demo=falcon) |
+| Serious technical review | Request access to the private JobSpark repository and the detailed ownership / test / authority documents |
+| Hiring conversation | I can walk through any section live, including recovery drills, state transitions, and the MathCo parallel work |
 
-## Closeout, recovery, and payroll
+---
 
-Completion is a controlled workflow, not a status button.
+## Summary
 
-```mermaid
-flowchart TD
-    A["Field contract and closeout evidence"] --> B["Native leased reader proposes closeout values"]
-    B --> C{"Required values valid?"}
-    C -->|"No"| D["Office Review with actionable missing fields"]
-    D --> E["Owner corrects the exact field"]
-    E --> C
-    C -->|"Yes"| F["Begin durable closeout execution"]
-    F --> G["Operations cleanup checkpoint"]
-    G --> H["Idempotent payroll aggregation checkpoint"]
-    H --> I["Payroll audit and office history checkpoints"]
-    I --> J["Server-owned final COMPLETED state"]
-    F -. "Process interruption" .-> K["Recovery worker resumes from last completed checkpoint"]
-    K --> F
-    K -. "Missing state or retry limit" .-> L["Critical Needs Attention"]
-```
+JobSpark is a real, deployed system built around explicit operational state, guarded transitions, recoverable execution, and visible uncertainty.  
+This page is the public index of that engineering work. Deeper source, tests, and internal review material are available to people who need them.
 
-Each stage records its completion. Replaying the workflow skips completed stages, protects payroll from double counting, and stops unsafe contradictions for owner review. A separate drift worker is designed to check that terminal job, truck, crew, closeout, and payroll markers still agree.
-
-
-The native reader stores proposals, leases each processing attempt and checks evidence/version consistency before committing. Interrupted processing can resume; incomplete or contradictory evidence goes to Office Review. Storage rules and real Admin uploads are covered locally, including role/workspace denials and explicit emulator token revocation. The deployed October 7 application checkpoint is recorded separately from current source CI in the live evidence record.
-
-## Deployment and Validation
-
-| Layer | Implementation |
-|---|---|
-| Web application | React, TypeScript, Vite, Tailwind CSS |
-| API | Node.js, Express, TypeScript |
-| Persistence and identity | Firestore, Firebase Authentication, Firebase Storage |
-| Communications | SignalWire |
-| Intake and model services | Make intake, bounded OpenAI requests, native Gemini contract reader |
-| Delivery | GitHub Actions, Vercel, Render |
-
-Validation focuses on operational invariants rather than screenshots alone: lifecycle transitions, duplicate deliveries, closeout integrity, side-effect resilience, crew replies, access boundaries, and production builds.
-
-## What the demo shows
-
-The public experience uses synthetic data to demonstrate the operating sequence without exposing customer information:
-
-1. Load operational resources.
-2. Convert intake into visible queues.
-3. Resolve incomplete or non-job calls.
-4. Promote jobs according to state and date.
-5. Schedule crews and trucks.
-6. Lock the dispatch state.
-7. Receive field contracts.
-8. Route incomplete closeout evidence for review.
-9. Process closeout into history and downstream payroll records.
-
-This is a guided synthetic scenario. It does not establish real SMS delivery, worker uptime, or a customer's deployment readiness.
-
-[Enter the JobSpark interactive demo](https://jobsparksystems.app/?demo=falcon)
-
-## Review and remaining release evidence
-
-Authorized reviewers can reproduce the local evidence with Node 22 and Java 17, using a fresh private-repository checkout:
-
-```sh
-npm ci
-npm run review:check
-npm run sandbox:browser
-```
-
-The reviewer runner supplies synthetic configuration and rejects local environment files. Browser checks run separately. Follow the pinned reviewer handoff for setup and fixture boundaries.
-
-The current evidence establishes a deployed connected path, recorded live-canary success, and passing checks for specified operational and financial invariants. It does not establish sustained paying-customer operation, measured ROI, universal OCR accuracy, an independently audited system or formal pilot acceptance.
-
-Remaining release evidence includes independent published Firebase/Storage policy and IAM readback, legacy broad-key retirement and outside-caller cutover, exact persisted live-canary identities/values, production acceptance of the missing-field correction, and messy-photo/multi-job payroll pilot checks. The operational kernel is implemented within JobSpark; a separately portable cross-industry kernel remains unproven.
-
-This public repository publishes architecture, evidence summaries and counting definitions. Application code, tests, CI configuration and customer configuration remain private. Repository access is granted separately.
+— Kyle Spivey  
+[jobsparksystems.com](https://jobsparksystems.com) · [LinkedIn](https://www.linkedin.com/in/kylespivey1)
